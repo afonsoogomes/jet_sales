@@ -1,0 +1,53 @@
+services:
+  app:
+    container_name: jet_sales_node_app
+    env_file: .env
+    command: npm run dev
+    build:
+      context: .
+      dockerfile: ./.docker/Dockerfile
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db
+      - redis
+      - rabbitmq
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/dist
+
+  db:
+    container_name: jet_sales_postgres_db
+    env_file: .env.postgres
+    image: postgres:15
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: jet_sales_redis_server
+    ports:
+      - '6379:6379'
+
+  rabbitmq:
+    container_name: jet_sales_rabbitmq_server
+    env_file: .env.rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - '5672:5672'
+      - '15672:15672'
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: jet_sales_redis_commander
+    env_file: .env.redis-commander
+    ports:
+      - '8081:8081'
+    depends_on:
+      - redis
+
+volumes:
+  pgdata:

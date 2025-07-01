@@ -26,7 +26,7 @@ Para começar, copie os arquivos de variáveis de ambiente de exemplo:
 
 Com o Docker e Docker Compose instalados, execute:
 
-    docker-compose up -d
+    docker compose up -d
 
 Esse comando irá:
 
